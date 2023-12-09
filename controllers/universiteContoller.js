@@ -27,4 +27,13 @@ app.post("/addUniversite", async (req, res) => {
   }
 });
 
+app.get('/all', async (req, res) => {
+    try {
+        let univs = await Universite.find();
+        res.status(200).send({ univs });
+    } catch (error) {
+        res.status(400).send({ message: "error !" });
+    }
+});
+
 module.exports = app;
