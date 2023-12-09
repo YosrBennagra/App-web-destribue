@@ -36,4 +36,18 @@ app.get('/all', async (req, res) => {
     }
 });
 
+app.get('/one/:idUniv', async (req, res) => {
+    try {
+        let id = req.params.idUniv;
+        let univ = await Universite.findOne({ _id: id });
+
+        if (!univ)
+            res.status(400).send({ message: "University not found!" });
+        else
+            res.status(200).send({ university: univ });
+    } catch (error) {
+        res.status(400).send({ message: "Error!" });
+    }
+});
+
 module.exports = app;
