@@ -50,4 +50,37 @@ app.get('/one/:idUniv', async (req, res) => {
     }
 });
 
+app.delete('/deleteAll', async (req, res) => {
+    try {
+        const univs = await Universite.find();
+
+        if (univs.length !== 0) {
+            const deletionResult = await Universite.deleteMany();
+
+            if (deletionResult.deletedCount > 0) {
+                res.status(200).send({ message: 'Deletion successful' });
+            } else {
+                res.status(400).send({ message: 'No univs found for deletion' });
+            }
+        } else {
+            res.status(400).send({ message: 'Table already deleted' });
+        }
+    } catch (error) {
+        res.status(500).send({ message: 'Internal Server Error', error: error.message });
+    }
+});
+
+app.delete('/deleOne/:idUniv', (req, res) => {
+    let id = req.params.idUniv;
+    Universite.findOneAndDelete({_id: id }).then((univ) => {
+        if (!univ)
+            res.status(400).send({ message: "univ nexiste pas!" })
+        else
+            res.status(200).send(univ)
+    }).catch(e => {
+        res.status(400).send(e)
+    })
+
+})
+
 module.exports = app;
