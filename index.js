@@ -12,5 +12,8 @@ app.use(bodyParser.json());
 
 app.use('/universite', universiteController);
 
-
-app.listen(3000, () => console.log("serveur activer!!"));
+// Start the server
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});

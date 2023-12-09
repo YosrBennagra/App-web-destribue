@@ -10,6 +10,11 @@ const universiteSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
+    createdAt: {
+      type: Date,
+      default: Date.now(),
+    },
+    updatedAt: { type: Date },
     /*
     foyer: {
       type: mongoose.Schema.ObjectId,
@@ -17,10 +22,6 @@ const universiteSchema = new mongoose.Schema(
       required: true,
     },
     */
-  },
-  {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
   }
 );
 
