@@ -25,6 +25,7 @@ public class FoyerService {
 
 
     public void SupprimeFoyer(long idfoyer) {
+        //supp
         foyerRepository.deleteById(idfoyer);
 
     }
