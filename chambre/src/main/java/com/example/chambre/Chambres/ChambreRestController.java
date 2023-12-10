@@ -8,8 +8,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/Chambre")
 @RestController
+@CrossOrigin(origins = "*")
 public class ChambreRestController {
     private final ChambreServices chambreService;
+
+
 
     @GetMapping("/GetAllChambre")
     public List<Chambre> GetAllChambre(){return chambreService.GetAllChambres();}
