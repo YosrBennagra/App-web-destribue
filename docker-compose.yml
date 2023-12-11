@@ -1,0 +1,190 @@
+version: "3"
+
+services:
+  eureka:
+    build: ./eureka
+    ports:
+      - "8761:8761"
+    container_name: eureka
+    image: "eureka"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
+    networks:
+      - mynetwork
+    volumes:
+      - ./eureka/target/eureka-0.0.1-SNAPSHOT.jar:/app.jar
+    command: [ "java", "-jar", "/app.jar" ]
+
+  gateway:
+    build: ./APIGateway
+    ports:
+      - "2020:2020"
+    container_name: gateway
+    image: "gateway"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
+    depends_on:
+      - eureka
+    networks:
+      - mynetwork
+    volumes:
+      - ./APIGateway/target/APIGateway-0.0.1-SNAPSHOT.jar:/app.jar
+    command: [ "java", "-jar", "/app.jar" ]
+
+  foyer:
+    build: ./foyer
+    ports:
+      - "8090:8090"
+    container_name: foyer
+    image: "foyer"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://docker-mysql_1:3306/FoyerDatabase?autoReconnect=true&useSSL=false
+    depends_on:
+      - docker-mysql_1
+      - eureka
+    networks:
+      - mynetwork
+    volumes:
+      - ./foyer/target/foyer-0.0.1-SNAPSHOT.jar:/app.jar
+    command: [ "java", "-jar", "/app.jar" ]
+
+  reservation:
+    build: ./Reservation
+    ports:
+      - "8096:8096"
+    container_name: resrvation
+    image: "reservation"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://docker-mysql_reservation:3306/reservationDATABSE?autoReconnect=true&useSSL=false
+    depends_on:
+      - docker-mysql_reservation
+      - eureka
+    networks:
+      - mynetwork
+    volumes:
+      - ./Reservation/target/Reservation-0.0.1-SNAPSHOT.jar:/app.jar
+    command: [ "java", "-jar", "/app.jar" ]
+
+  chambre:
+    build: ./chambre
+    ports:
+      - "8094:8094"
+    container_name: chambre
+    image: "chambre"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://docker-mysql_chambre:3306/chambreDatabase?autoReconnect=true&useSSL=false
+    depends_on:
+      - docker-mysql_chambre
+      - eureka
+    networks:
+      - mynetwork
+    volumes:
+      - ./chambre/target/chambre-0.0.1-SNAPSHOT.jar:/app.jar
+    command: [ "java", "-jar", "/app.jar" ]
+
+
+  bloc:
+    build: ./bloc
+    ports:
+      - "8095:8095"
+    container_name: bloc
+    image: "bloc"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://docker-mysql_bloc:3306/blocDatabse?autoReconnect=true&useSSL=false
+    depends_on:
+      - docker-mysql_bloc
+      - eureka
+    networks:
+      - mynetwork
+    volumes:
+      - ./bloc/target/bloc-0.0.1-SNAPSHOT.jar:/app.jar
+    command: [ "java", "-jar", "/app.jar" ]
+
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak-server
+    build:
+      context: ./keyclockserver
+      dockerfile: Dockerfile
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: password
+      DB_VENDOR: MYSQL
+      DB_ADDR: docker-mysql_keycloak
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+    ports:
+      - "8080:8080"
+    depends_on:
+      - docker-mysql_keycloak
+    networks:
+      - mynetwork
+
+
+  docker-mysql_reservation:
+    image: "mysql:5.6"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+      - MYSQL_DATABASE=reservationDATABSE
+    ports:
+      - 3306:3306
+    networks:
+      - mynetwork
+
+
+  docker-mysql_1:
+    image: "mysql:5.6"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+      - MYSQL_DATABASE=FoyerDatabase
+    ports:
+      - 3307:3306
+    networks:
+      - mynetwork
+
+
+
+  docker-mysql_keycloak:
+    image: "mysql:5.6"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=keycloak
+      - MYSQL_USER=keycloak
+      - MYSQL_PASSWORD=keycloak
+    ports:
+      - 3308:3306
+    networks:
+      - mynetwork
+
+
+
+  docker-mysql_chambre:
+    image: "mysql:5.6"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+      - MYSQL_DATABASE=chambreDatabase
+    ports:
+      - 3309:3306
+    networks:
+      - mynetwork
+
+  docker-mysql_bloc:
+    image: "mysql:5.6"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+      - MYSQL_DATABASE=blocDatabse
+    ports:
+      - 3310:3306
+    networks:
+      - mynetwork
+
+
+
+networks:
+  mynetwork: {}
