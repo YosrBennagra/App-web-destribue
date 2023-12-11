@@ -1,5 +1,5 @@
-/*const mongoose = require("mongoose");
-const universiteSchema = new mongoose.Schema(
+const mongoose = require("mongoose");
+const historiqueSchema = new mongoose.Schema(
     {
       nom: {
         type: String,
@@ -13,11 +13,17 @@ const universiteSchema = new mongoose.Schema(
         type: Date,
         default: Date.now(),
       },
-
+      
+      /*
+      user: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      */
     }
   );
 
-  const Universite = mongoose.model("universite", universiteSchema);
+  const Historique = mongoose.model("historique", historiqueSchema);
 
-module.exports = Universite;
-*/
+module.exports = Historique;
