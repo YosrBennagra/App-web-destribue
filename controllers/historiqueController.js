@@ -1,5 +1,5 @@
 const express = require("express");
-const mongoose = require("../db/connect");
+const {pool} = require("../db/connect");
 const Historique = require("../models/historique");
 const app = express();
 
@@ -47,5 +47,26 @@ app.get("/one/:idHisto", async (req, res) => {
     res.status(400).send({ message: "Error!" });
   }
 });
+
+/*sql */
+
+
+app.get("/allResto", async (req, res) => {
+    try {
+      const [RestoTabe] = await pool.query('SELECT * FROM restaurant');
+      res.status(200).json({
+        status: "success",
+        data: RestoTabe
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: "error",
+        message: "Internal Server Error",
+        data: {
+          error: error.message,
+        },
+      });
+    }
+  });
 
 module.exports = app;
