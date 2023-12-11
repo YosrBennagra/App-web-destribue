@@ -8,8 +8,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/Chambre")
 @RestController
+@CrossOrigin(origins = "*")
 public class ChambreRestController {
     private final ChambreServices chambreService;
+
+
 
     @GetMapping("/GetAllChambre")
     public List<Chambre> GetAllChambre(){return chambreService.GetAllChambres();}
@@ -25,4 +28,6 @@ public class ChambreRestController {
     public void SupprimerChambre(@PathVariable long id){
         chambreService.SupprimerChambre(id);
     }
+    @GetMapping("/GetAllChambreByIdBloc/{id}")
+    public List<Chambre> GetAllChambreByIdBloc(@PathVariable Long id){return chambreService.GetChambresByIdBloc(id);}
 }

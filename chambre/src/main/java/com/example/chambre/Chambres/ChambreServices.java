@@ -39,4 +39,8 @@ public class ChambreServices {
         return chambreRepository.findAll();
     }
 
+    public List<Chambre> GetChambresByIdBloc(Long idBloc) {
+        return chambreRepository.findByIdBloc(idBloc);
+    }
+
 }
