@@ -104,6 +104,24 @@ services:
       - ./bloc/target/bloc-0.0.1-SNAPSHOT.jar:/app.jar
     command: [ "java", "-jar", "/app.jar" ]
 
+  univ:
+    build: ./Univ
+    ports:
+      - "8097:8097"
+    container_name: univ
+    image: "univ"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://docker-mysql_univ:3306/univDatabse?autoReconnect=true&useSSL=false
+    depends_on:
+      - docker-mysql_univ
+      - eureka
+    networks:
+      - mynetwork
+    volumes:
+      - ./Univ/target/Univ-0.0.1-SNAPSHOT.jar:/app.jar
+    command: [ "java", "-jar", "/app.jar" ]
+
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
@@ -120,7 +138,7 @@ services:
       DB_USER: keycloak
       DB_PASSWORD: keycloak
     ports:
-      - "8080:8080"
+      - "8081:8080"
     depends_on:
       - docker-mysql_keycloak
     networks:
@@ -181,6 +199,16 @@ services:
       - MYSQL_DATABASE=blocDatabse
     ports:
       - 3310:3306
+    networks:
+      - mynetwork
+
+  docker-mysql_univ:
+    image: "mysql:5.6"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+      - MYSQL_DATABASE=univDatabse
+    ports:
+      - 3311:3306
     networks:
       - mynetwork
 
