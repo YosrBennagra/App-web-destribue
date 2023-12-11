@@ -28,4 +28,6 @@ public class ChambreRestController {
     public void SupprimerChambre(@PathVariable long id){
         chambreService.SupprimerChambre(id);
     }
+    @GetMapping("/GetAllChambreByIdBloc/{id}")
+    public List<Chambre> GetAllChambreByIdBloc(@PathVariable Long id){return chambreService.GetChambresByIdBloc(id);}
 }
