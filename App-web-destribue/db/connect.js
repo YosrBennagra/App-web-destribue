@@ -1,15 +1,26 @@
 const mongoose = require('mongoose');
+const mysql = require('mysql2/promise');
 
-mongoose.connect('mongodb://127.0.0.1:27017/universiteDB')
+// Connexion à MongoDB
+mongoose.connect('mongodb://127.0.0.1:27017/universiteDB');
 
-const db = mongoose.connection;
+const mongoDB = mongoose.connection;
 
-db.on('error', (error) => {
-  console.error('MongoDB connection error:', error);
+mongoDB.on('error', console.error.bind(console, 'Erreur de connexion à MongoDB :'));
+mongoDB.once('open', () => {
+  console.log('Connecté à MongoDB !');
 });
 
-db.once('open', () => {
-  console.log('Connected to MongoDB');
+// Connexion à la base de données SQL (MySQL dans cet exemple)
+const pool = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'springdb'
 });
 
-module.exports = mongoose;
+
+module.exports = {
+  mongoose,
+  pool
+};
