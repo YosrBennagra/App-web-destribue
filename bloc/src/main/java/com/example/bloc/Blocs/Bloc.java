@@ -16,4 +16,7 @@ public class Bloc {
     private String nomBloc;
     private Long capaciteBloc;
 
+
+    private Long idFoyer;
+
 }

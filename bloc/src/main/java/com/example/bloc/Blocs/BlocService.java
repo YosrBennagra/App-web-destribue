@@ -33,4 +33,8 @@ public class BlocService {
     public List<Bloc> GetAllBlocs() {
         return blocRepository.findAll();
     }
+
+
+    public List<Bloc> getBlocByIdFoyer(long idFoyer){return blocRepository.findByIdFoyer(idFoyer);}
+
 }

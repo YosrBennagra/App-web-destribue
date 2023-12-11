@@ -12,6 +12,8 @@ import java.util.List;
 @RequestMapping("/bloc")
 @RestController
 
+@CrossOrigin(origins = "*")
+
 public class BlocController {
     private final BlocService blocService;
     @GetMapping("/Allblocs")
@@ -29,6 +31,8 @@ public class BlocController {
         return blocService.UpdateBloc(b);
     }
 
+    @GetMapping("bloc/{id}")
+    public List<Bloc> getBlocByIdFoyer(@PathVariable long id){return blocService.getBlocByIdFoyer(id);}
 
 
 }
